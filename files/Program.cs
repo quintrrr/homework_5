@@ -169,7 +169,16 @@ class Program
 
     static void Ex1()
     {
-        string folder = "/Users/arinagomza/RiderProjects/homework_5/images";
+        string[] paths = Directory.GetCurrentDirectory().Split('/');
+        string folder = String.Empty;
+
+        for (int i = 0; i < paths.Length - 3; i++)
+        {
+            folder += paths[i] + "/";
+        }
+        
+
+        folder += "images";
 
         if (!Directory.Exists(folder))
         {
@@ -206,8 +215,7 @@ class Program
         {
             filePath += paths[i] + "/";
         }
-
-        Console.WriteLine(filePath);
+        
 
         filePath += "students.txt";
 
