@@ -133,6 +133,39 @@ class Program
             Console.WriteLine($"{i + 1}: {list[i].Name}");
         }
     }
+    
+    static List<int> FindShortestPath(Dictionary<int, List<int>> graph, int start, int target)
+    {
+        Queue<List<int>> queue = new Queue<List<int>>();
+        queue.Enqueue(new List<int> { start });
+        HashSet<int> visited = new HashSet<int>();
+        visited.Add(start);
+
+        while (queue.Count > 0)
+        {
+            List<int> path = queue.Dequeue();
+            int currentNode = path[^1];
+
+            if (currentNode == target)
+                return path;
+
+            if (graph.ContainsKey(currentNode))
+            {
+                foreach (int neighbor in graph[currentNode])
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        List<int> newPath = new List<int>(path);
+                        newPath.Add(neighbor);
+                        queue.Enqueue(newPath);
+                    }
+                }
+            }
+        }
+
+        return new List<int>();
+    }
 
     static void Ex1()
     {
@@ -237,7 +270,45 @@ class Program
         }
     }
 
+    static void Ex4()
+    {
+        Dictionary<int, List<int>> graph = new Dictionary<int, List<int>>
+        {
+            { 1, new List<int> { 2, 3 } },
+            { 2, new List<int> { 4, 5 } },
+            { 3, new List<int> { 6 } },
+            { 4, new List<int> { 7 } },
+            { 5, new List<int> { 7 } },
+            { 6, new List<int> { 7 } },
+            { 7, new List<int>() }
+        };
 
+        Console.WriteLine("Введите начальную вершину:");
+        if (!int.TryParse(Console.ReadLine(), out int start))
+        {
+            Console.WriteLine("Ошибка: некорректный ввод числа для начальной вершины.");
+            return;
+        }
+
+        Console.WriteLine("Введите целевую вершину:");
+        if (!int.TryParse(Console.ReadLine(), out int target))
+        {
+            Console.WriteLine("Ошибка: некорректный ввод числа для целевой вершины.");
+            return;
+        }
+
+        List<int> shortestPath = FindShortestPath(graph, start, target);
+
+        if (shortestPath.Count > 0)
+        {
+            Console.WriteLine("Кратчайший путь:");
+            Console.WriteLine(string.Join(" -> ", shortestPath));
+        }
+        else
+        {
+            Console.WriteLine("Путь не найден.");
+        }
+    }
 
 
     public static void Main(string[] args)
@@ -247,7 +318,7 @@ class Program
         // картинками. Вывести в консоль перемешанные номера (изначальный List и полученный
         // List). Перемешать любым способом.
         Console.WriteLine("Упражнение 1");
-        // Ex1();
+        Ex1();
 
         // Создать студента из вашей группы (фамилия, имя, год рождения, с каким экзаменом
         // поступил, баллы). Создать словарь для студентов из вашей группы (10 человек).
@@ -262,5 +333,9 @@ class Program
         Console.WriteLine("Упражнение 2");
         Ex2();
 
+        // Написать метод для обхода графа в глубину или ширину - вывести на экран кратчайший
+        // путь.
+        Console.WriteLine("Упражнение 4");
+        Ex4();
     }
 }
